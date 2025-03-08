@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import UserAplications
+from .models import UserApplications
 
-class JobAplySerializer(serializers.ModelSerializer):
-    model = UserApplications
-    Fields = '__all__'
+class UserApplySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserApplications
+        fields = '__all__'
