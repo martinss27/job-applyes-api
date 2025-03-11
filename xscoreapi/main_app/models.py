@@ -1,23 +1,28 @@
 from django.db import models
+from django.utils.timezone import now
 
 # Create your models here.
-
-class UserApplications(models.Model):
-    title = models.CharField(max_length=300)
-    company_name = models.CharField(max_length=300)
-    description = models.TextField(max_length=500)
-    application_date = models.DateField(auto_now=True)
-
-    JOB_TYPE_CHOICES = [ 
-    ('hybrid', 'hybrid'),
-    ('remote', 'remote'),
-    ('on_site', 'on site'),
-    ('in_person', 'in person'),] 
-    job_type = models.CharField(max_length=10, choices=JOB_TYPE_CHOICES)
-    
-    '''the first values are how they should appear in the database, the second ones are how they should 
-    appear to users, which is why there are 2 items in each tuple'''
+class User(models.Model):
+    name = models.CharField(max_length=300)
+    email = models.EmailField(unique=True)
 
     def __str__(self):
-        return f"{self.title} - {self.company_name}"
+        return self.name
 
+class Job(models.Model):
+    user = models.ForeignKey(User, related_name='jobs', on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    company = models.CharField(max_length=200, null=True, blank=True)
+    desc = models.TextField(max_length=500)
+    application_date = models.DateField(auto_now=True)
+    JOB_CHOICES = [
+        ("hybrid", "hybrid"),
+        ("remote", "remote"),
+        ("in-person", "in person"),
+    ]
+    job_type = models.CharField(max_length=10, choices=JOB_CHOICES)
+    applied_on = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, default="Pending")
+
+    def __str__(self):
+        return  f"{self.title} - {self.company}"

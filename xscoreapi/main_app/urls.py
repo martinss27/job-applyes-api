@@ -1,10 +1,10 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import UserApplicationViewSet
+from .views import UserViewSet
 
 router = DefaultRouter()
-router.register(r'user-applications', UserApplicationViewSet)
+router.register(r'users', UserViewSet, basename='user')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('jobtracker/', include(router.urls)),
 ]
