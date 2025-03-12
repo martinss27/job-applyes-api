@@ -6,5 +6,5 @@ router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
 
 urlpatterns = [
-    path('jobtracker/', include(router.urls)),
+    path('', include(router.urls)),
 ]
