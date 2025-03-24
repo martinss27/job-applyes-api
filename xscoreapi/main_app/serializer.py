@@ -21,3 +21,26 @@ class UserSerializer(serializers.ModelSerializer):
             Job.objects.create(user=user, **job_data)
 
         return user
+    
+    def update(self, instance, validated_data):
+        jobs_data = validated_data.pop('jobs', [])
+
+        instance.name = validated_data.get('name', instance.name)
+        instance.email = validated_data.get('email', instance.email)
+        instance.save()
+
+        existing_jobs = {job.id: job for job in instance.jobs.all()}
+
+        for job_data in jobs_data:
+            job_id = job_data.get('id', None)
+
+
+            if job_id and job_id in existing_jobs:
+                job = existing_jobs[job_id]
+                for attr, value in job_data.items():
+                        setattr(job, attr, value)
+                job.save()
+            else:
+                Job.objects.create(user=instance, **job_data)
+        
+        return instance
